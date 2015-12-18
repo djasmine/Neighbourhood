@@ -45,7 +45,7 @@ else {
             if ($row["userid"] != $id) {
                 echo "<tr><th>" . $row["username"] . "</th><th>" . $row["email"] . "</th>";
                 echo "<form action='send_message.php' method='post'>";
-                echo "<input type='hidden' name='receiver' value='FRIEND'>";
+                echo "<input type='hidden' name='receiver' value='BLOCK'>";
                 echo "<input type='hidden' name='receiver_id' value=" . $row["userid"] . ">";
                 echo "<th><input type='submit' class='btn btn-primary' value='send'></th>";
                 echo "</form>";

@@ -15,11 +15,11 @@ session_start();
 <div class="jumbotron">
     <div class="container">
         <h2>Log in</h2>
-            <form class="form-horizontal" action="main.php" method="post">
+            <form class="form-horizontal" action="message.php" method="post">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">ID</label>
+                    <label class="col-sm-2 control-label">Email</label>
                     <div class="col-sm-4">
-                        <input type="number" class="form-control" name="id" placeholder="ID">
+                        <input type="text" class="form-control" name="email" placeholder="yourname@nyu.edu">
                     </div>
                 </div>
                 <div class="form-group">

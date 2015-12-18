@@ -18,6 +18,8 @@ $con = mysqli_connect("127.0.0.1:3306", "root", "", "Neighbourhood");
 if (!$con) {
     die("connection failed");
 }
+echo "<div class='jumbotron'>";
+echo "<div class='container'>";
 #insert a new message
 if (isset($_POST["receiver_id"])) {
     $receiver = $_POST["receiver"];
@@ -65,7 +67,7 @@ if (isset($_POST["receiver_id"])) {
     $mid = $row["max_mid"] + 1;
     $content = $_POST["content"];
     $title = $_POST["title"];
-    $m_date = $m_date = date("Y-m-d H:i:s");
+    $m_date = date("Y-m-d H:i:s");
     $query = "insert into message(mid, m_number, author, send_time, title, content, location, receiver) values(?,0,?,?,?,?,null,?)";
     $stmt = mysqli_prepare($con, $query);
     $stmt->bind_param("iissss", $mid, $id, $m_date, $title, $content, $receiver);
@@ -107,8 +109,6 @@ if (isset($_POST["receiver_id"])) {
 }
 
 #web page
-echo "<div class='jumbotron'>";
-echo "<div class='container'>";
 $query = "update feed set fstatus='read' where mid=? and userid=?";
 $stmt = mysqli_prepare($con, $query);
 $stmt->bind_param("ii", $mid, $id);

@@ -14,6 +14,7 @@ session_start();
 <body>
 <?php include('../html/navbar.html');
     if (isset($_POST["change_value"])) {
+        #change some value
         $id = $_SESSION["id"];
         $email = $_POST["email"];
         $description = $_POST["description"];
@@ -40,72 +41,6 @@ session_start();
         $stmt = mysqli_prepare($con, $query);
         $stmt->bind_param("ssi", $email, $description, $id);
         $stmt->execute();
-    } else if (isset($_POST["description"])) {
-        # new user
-        $description = $_POST["description"];
-        $username = $_POST["username"];
-        $pwd = $_POST["password"];
-        $blockid = $_POST["block"];
-        $hoodid = $_POST["hood"];
-        $email = $_POST["email"];
-        $con = mysqli_connect("127.0.0.1:3306", "root", "", "Neighbourhood");
-        if (!$con) {
-            die("connection failed");
-        }
-        $query0 = "select blockname from blocks where blockid=? and hoodid=?";
-        $stmt0 = mysqli_prepare($con, $query0);
-        $stmt0->bind_param("ii", $blockid, $hoodid);
-        $stmt0->execute();
-        $res0 = $stmt0->get_result();
-        if ($res0->num_rows == 0) {
-            $_SESSION["msg"] = "wrong block id or hood id";
-            header("Location: ../php/error.php");
-            exit;
-        }
-        $query = "select max(userid) as uid from `user`";
-        $stmt = mysqli_prepare($con, $query);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        $row = $res->fetch_assoc();
-        $id = $row["uid"] + 1;
-        $query1 = "insert into `user`(userid, username, email, description, blockid, hoodid, password) values(?,?,?,?,null,null,?)";
-        $stmt1 = mysqli_prepare($con, $query1);
-        $stmt1->bind_param("issss", $id, $username, $email, $description, $pwd);
-        $stmt1->execute();
-        $query2 = "insert into join_block(userid, blockid, approve_num) values(?,?,0)";
-        $stmt2 = mysqli_prepare($con, $query2);
-        $stmt2->bind_param("ii", $id, $blockid);
-        $stmt2->execute();
-        $_SESSION["id"] = $id;
-        $hoodid = -1;
-        $blockid = -1;
-    }
-    else if (isset($_POST["id"])) {
-        # log in
-        $id = $_POST["id"];
-        $pwd = $_POST["pwd"];
-        $con = mysqli_connect("127.0.0.1:3306", "root", "", "Neighbourhood");
-        if (!$con) {
-            die("connection failed");
-        }
-        $query = "select username, email, blockid, description, hoodid from `user` where userid = ? and password = ?";
-        $stmt = mysqli_prepare($con, $query);
-        $stmt->bind_param("is", $id, $pwd);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        if ($res->num_rows == 0) {
-            $_SESSION["msg"] = "wrong user id or password";
-            header("Location: ../php/error.php");
-            exit;
-        }
-        $row = $res->fetch_assoc();
-        $username = $row["username"];
-        $email = $row["email"];
-        $blockid = $row["blockid"];
-        $hoodid = $row["hoodid"];
-        $description = $row["description"];
-        $_SESSION["id"] = $id;
-        $_SESSION["username"] = $username;
     } else {
         if (isset($_SESSION["id"])) {
             # click main

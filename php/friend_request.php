@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,12 +40,13 @@ echo "<div class='container'>";
 if ($res->num_rows == 0) {
     echo "<h2>Oh, you currently have no friend reqeusts</h2>";
 } else {
+    echo "<h2>They want to be your friends.</h2>";
     echo "<table class='table'>";
     echo "<thead><tr><td>Name</td><td>Email</td><td>Accept</td></tr></thead>";
     echo "<tbody>";
     while ($row = $res->fetch_assoc()) {
         echo "<tr><td>".$row["username"]."</td><td>".$row["email"]."</td>";
-        echo "<form action='block_request.php' method='post'>";
+        echo "<form action='friend_request.php' method='post'>";
         echo "<input type='hidden' name='f_userid' value=".$row["userid"].">";
         echo "<td><input type='submit' class='btn btn-primary' value='accept'></td>";
         echo "</form></tr>";

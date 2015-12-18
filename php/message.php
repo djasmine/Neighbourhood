@@ -14,10 +14,83 @@ session_start();
 <?php include('../html/navbar.html');
 echo "<div class='jumbotron'>";
 echo "<div class='container'>";
-$id = $_SESSION["id"];
 $con = mysqli_connect("127.0.0.1:3306", "root", "", "Neighbourhood");
 if (!$con) {
     die("connection failed");
+}
+else if (isset($_POST["description"])) {
+    # new user
+    $description = $_POST["description"];
+    $username = $_POST["username"];
+    $pwd = $_POST["password"];
+    $blockid = $_POST["block"];
+    $hoodid = $_POST["hood"];
+    $email = $_POST["email"];
+    #check block right
+    $query0 = "select blockname from blocks where blockid=? and hoodid=?";
+    $stmt0 = mysqli_prepare($con, $query0);
+    $stmt0->bind_param("ii", $blockid, $hoodid);
+    $stmt0->execute();
+    $res0 = $stmt0->get_result();
+    if ($res0->num_rows == 0) {
+        $_SESSION["msg"] = "wrong block id or hood id";
+        header("Location: ../php/error.php");
+        exit;
+    }
+    # check email
+    $query = "select userid from `user` where email=?";
+    $stmt = mysqli_prepare($con, $query);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res->num_rows > 0) {
+        $_SESSION["msg"] = "Your email has been used in this site.";
+        header("Location: error.php");
+        exit;
+    }
+
+    $query = "select max(userid) as uid from `user`";
+    $stmt = mysqli_prepare($con, $query);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $row = $res->fetch_assoc();
+    $id = $row["uid"] + 1;
+    $query1 = "insert into `user`(userid, username, email, description, blockid, hoodid, password) values(?,?,?,?,null,null,?)";
+    $stmt1 = mysqli_prepare($con, $query1);
+    $stmt1->bind_param("issss", $id, $username, $email, $description, $pwd);
+    $stmt1->execute();
+    $query2 = "insert into join_block(userid, blockid, approve_num) values(?,?,0)";
+    $stmt2 = mysqli_prepare($con, $query2);
+    $stmt2->bind_param("ii", $id, $blockid);
+    $stmt2->execute();
+    $_SESSION["id"] = $id;
+    $hoodid = -1;
+    $blockid = -1;
+}
+else if (isset($_POST["email"])) {
+    # log in
+    $email = $_POST["email"];
+    $pwd = $_POST["pwd"];
+    $query = "select userid, username, blockid, description, hoodid from `user` where email=? and password=?";
+    $stmt = mysqli_prepare($con, $query);
+    $stmt->bind_param("ss", $email, $pwd);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res->num_rows == 0) {
+        $_SESSION["msg"] = "wrong user id or password";
+        header("Location: ../php/error.php");
+        exit;
+    }
+    $row = $res->fetch_assoc();
+    $username = $row["username"];
+    $blockid = $row["blockid"];
+    $hoodid = $row["hoodid"];
+    $description = $row["description"];
+    $id = $row["userid"];
+    $_SESSION["id"] = $id;
+    $_SESSION["username"] = $username;
+} else {
+    $id = $_SESSION["id"];
 }
 $query1 = "select mid, max(send_time) as t from feed natural join message where userid=? group by mid order by t DESC";
 $stmt1 = mysqli_prepare($con, $query1);
