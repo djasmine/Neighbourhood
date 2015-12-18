@@ -80,6 +80,8 @@ session_start();
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Address</label>
+                    <!-- add address to hidden value-->
+                    <input id="address" value="" type="hidden" class="form-control" name="address">
                     <div class="col-sm-4">
                         <input id="pac-input" class="controls" type="text" placeholder="Search Box">
                         <div id="map"></div>
@@ -145,6 +147,7 @@ session_start();
                                     } else {
                                         bounds.extend(place.geometry.location);
                                     }
+                                    document.getElementById("address").value = input.value;
                                     document.getElementById("lat").value = place.geometry.location.lat();
                                     document.getElementById("lng").value = place.geometry.location.lng();
                                 });
@@ -154,6 +157,7 @@ session_start();
                         }
                     </script>
                 </div>
+                <!-- add latitude and longtitude to hidden value-->
                 <input id="lat" value="" type="hidden" class="form-control" name="lat">
                 <input id="lng" value="" type="hidden" class="form-control" name="lng">
                 <div class="form-group">
