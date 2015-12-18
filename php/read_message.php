@@ -13,7 +13,13 @@ session_start();
 <body>
 <?php include('../html/navbar.html');
 
-$id = $_SESSION["id"];
+if (isset($_SESSION["id"])) {
+    $id = $_SESSION["id"];
+} else {
+    $_SESSION["msg"] = "out of session";
+    header("Location: error.php");
+    exit;
+}
 $con = mysqli_connect("127.0.0.1:3306", "root", "", "Neighbourhood");
 if (!$con) {
     die("connection failed");

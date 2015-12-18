@@ -22,6 +22,19 @@ session_start();
         if (!$con) {
             die("connection failed");
         }
+        if ($email != "") {
+            $query = "select userid frome `user` where email=?";
+            $stmt = mysqli_prepare($con, $query);
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            if ($res->num_rows > 0) {
+                $_SESSION["msg"] = "This email is used by another user.";
+                header("Location: error.php");
+                exit;
+            }
+        }
+
         $query = "select username, email, description, blockid, hoodid from `user` where userid=?";
         $stmt = mysqli_prepare($con, $query);
         $stmt->bind_param("i", $id);

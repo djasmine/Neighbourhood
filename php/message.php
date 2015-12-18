@@ -89,8 +89,12 @@ else if (isset($_POST["email"])) {
     $id = $row["userid"];
     $_SESSION["id"] = $id;
     $_SESSION["username"] = $username;
-} else {
+} else if (isset($_SESSION["id"])) {
     $id = $_SESSION["id"];
+} else {
+    $_SESSION["msg"] = "out of session";
+    header("Location: error.php");
+    exit;
 }
 
 $pattern = "%";
