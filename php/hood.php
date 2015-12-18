@@ -20,6 +20,23 @@ session_start();
     if (!$con) {
         die("connection failed");
     }
+
+    if (isset($_POST["friend_id"])) {
+        #solve the add friend
+        $friend_id = $_POST["friend_id"];
+        $query = "insert into friend_request(user1, user2) values(?,?)";
+        $stmt = mysqli_prepare($con, $query);
+        $stmt->bind_param("ii", $id, $friend_id);
+        $stmt->execute();
+    } else if (isset($_POST["neighbor_id"])) {
+        #solve the add neighbor
+        $neighbor_id = $_POST["neighbor_id"];
+        $query = "insert into neighbor(host_id, neighbor_id) values(?,?)";
+        $stmt = mysqli_prepare($con, $query);
+        $stmt->bind_param("ii", $id, $neighbor_id);
+        $stmt->execute();
+    }
+
     $query0 = "select hoodid from `user` where userid=?";
     $stmt0 = mysqli_prepare($con, $query0);
     $stmt0->bind_param("i", $id);
@@ -39,7 +56,7 @@ session_start();
         if ($res1->num_rows > 1) {
             echo "<h3>Hey, here are people living in your hood</h3>";
             echo "<table class='table'>";
-            echo "<thead><tr><th>name</th><th>email</th><th>send message</th></tr></thead>";
+            echo "<thead><tr><th>name</th><th>email</th><th>send message</th><th>add friend</th><th>add neighbor</th></tr></thead>";
             echo "<tbody>";
             while ($row = $res1->fetch_assoc()) {
                 if ($row["userid"] != $id) {
@@ -49,6 +66,37 @@ session_start();
                     echo "<input type='hidden' name='receiver_id' value=" . $row["userid"] . ">";
                     echo "<th><input type='submit' class='btn btn-primary' value='send'></th>";
                     echo "</form>";
+                    # add friend button
+                    $query = "select user1 from friendship where (user1=? and user2=?) or (user1=? and user2=?)";
+                    $stmt = mysqli_prepare($con, $query);
+                    $stmt->bind_param("iiii", $id, $row["userid"], $row["userid"], $id);
+                    $stmt->execute();
+                    $res = $stmt->get_result();
+
+                    if ($res->num_rows == 0) {
+                        echo "<form action='hood.php' method='post'>";
+                        echo "<input type='hidden' name='friend_id' value=".$row["userid"].">";
+                        echo "<th><input type='submit' value='add' class='btn btn-primary'></th>";
+                        echo "</form>";
+                    } else {
+                        echo "<th>-</th>";
+                    }
+
+                    #add neighbor button
+                    $query = "select host_id from neighbor where host_id=? and neighbor_id=?";
+                    $stmt = mysqli_prepare($con, $query);
+                    $stmt->bind_param("ii", $id, $row["userid"]);
+                    $stmt->execute();
+                    $res = $stmt->get_result();
+                    if ($res->num_rows == 0) {
+                        echo "<form action='hood.php' method='post'>";
+                        echo "<input type='hidden' name='neighbor_id' value=".$row["userid"].">";
+                        echo "<th><input type='submit' value='add' class='btn btn-primary'></th>";
+                        echo "</form>";
+                    } else {
+                        echo "<th>-</th>";
+                    }
+
                     echo "</tr>";
                 }
             }
