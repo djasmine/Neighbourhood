@@ -11,13 +11,15 @@ session_start();
     <title>Error Page</title>
 </head>
 <body>
-<div class="container">
-<?php
-    echo $_SESSION["msg"];
+<div class="jumbotron">
+    <div class="container">
+<?php include("../html/navbar_simple.html");
+    echo "<h1>".$_SESSION["msg"]."</h1>";
 ?>
-
     <a href="../index.php" class="btn btn-primary btn-lg">main page</a>
+
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    </div>
 </div>
 </body>

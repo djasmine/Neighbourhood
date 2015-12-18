@@ -103,9 +103,9 @@ if (isset($_POST["keyword"])) {
 }
 
 $query1 = "select mid, max(send_time) as t from feed natural join ".
-    "(select distinct mid, send_time from message where content like ?) as z where userid=? group by mid order by t DESC";
+    "(select distinct mid, send_time from message where content like ? or title like ?) as z where userid=? group by mid order by t DESC";
 $stmt1 = mysqli_prepare($con, $query1);
-$stmt1->bind_param("si", $pattern, $id);
+$stmt1->bind_param("ssi", $pattern, $pattern, $id);
 $stmt1->execute();
 $res1 = $stmt1->get_result();
 if ($res1->num_rows == 0) {
