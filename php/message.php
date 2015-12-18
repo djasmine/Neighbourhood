@@ -23,17 +23,18 @@ else if (isset($_POST["description"])) {
     $description = $_POST["description"];
     $username = $_POST["username"];
     $pwd = $_POST["password"];
-    $blockid = $_POST["block"];
-    $hoodid = $_POST["hood"];
     $email = $_POST["email"];
+    $addr = $_POST["address"];
+    $lng = $_POST["lng"];
+    $lat = $_POST["lat"];
     #check block right
-    $query0 = "select blockname from blocks where blockid=? and hoodid=?";
+    $query0 = "select blockname from blocks where long_st<? and ?<=long_ed and lati_st<? and ?<=lati_ed";
     $stmt0 = mysqli_prepare($con, $query0);
-    $stmt0->bind_param("ii", $blockid, $hoodid);
+    $stmt0->bind_param("dddd", $lng, $lng, $lat, $lat);
     $stmt0->execute();
     $res0 = $stmt0->get_result();
     if ($res0->num_rows == 0) {
-        $_SESSION["msg"] = "wrong block id or hood id";
+        $_SESSION["msg"] = "Address out of our range";
         header("Location: ../php/error.php");
         exit;
     }
@@ -55,9 +56,9 @@ else if (isset($_POST["description"])) {
     $res = $stmt->get_result();
     $row = $res->fetch_assoc();
     $id = $row["uid"] + 1;
-    $query1 = "insert into `user`(userid, username, email, description, blockid, hoodid, password) values(?,?,?,?,null,null,?)";
+    $query1 = "insert into `user`(userid, username, email, description, password, latitude, longitude, address) values(?,?,?,?,?,?,?,?)";
     $stmt1 = mysqli_prepare($con, $query1);
-    $stmt1->bind_param("issss", $id, $username, $email, $description, $pwd);
+    $stmt1->bind_param("issssdds", $id, $username, $email, $description, $pwd, $lat, $lng, $addr);
     $stmt1->execute();
     $query2 = "insert into join_block(userid, blockid, approve_num) values(?,?,0)";
     $stmt2 = mysqli_prepare($con, $query2);

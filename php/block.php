@@ -60,17 +60,22 @@ else {
     $res1 = $stmt1->get_result();
     if ($res1->num_rows > 1) {
         echo "<h3>Hey, here are people living in your block</h3>";
+        echo "<div class='container'>";
+        echo "<form class='form-horizontal' action='send_message.php' method='post'>";
+        echo "<input type='hidden' value='BLOCK' name='receiver'>";
+        echo "<input type='hidden' value='' name='receiver_id'>";
+        echo "<div class='col-sm-9'></div>";
+        echo "<div class='col-sm-1'>";
+        echo "<input class='btn btn-success' type='submit' value='send to entire block'>";
+        echo "</div>";
+        echo "</form>";
+        echo "</div>";
         echo "<table class='table'>";
-        echo "<thead><tr><th>name</th><th>email</th><th>send message</th><th>add friend</th><th>add neighbor</th></tr></thead>";
+        echo "<thead><tr><th>name</th><th>email</th><th>add friend</th><th>add neighbor</th></tr></thead>";
         echo "<tbody>";
         while ($row = $res1->fetch_assoc()) {
             if ($row["userid"] != $id) {
                 echo "<tr><th>" . $row["username"] . "</th><th>" . $row["email"] . "</th>";
-                echo "<form action='send_message.php' method='post'>";
-                echo "<input type='hidden' name='receiver' value='BLOCK'>";
-                echo "<input type='hidden' name='receiver_id' value=" . $row["userid"] . ">";
-                echo "<th><input type='submit' class='btn btn-primary' value='send'></th>";
-                echo "</form>";
                 # add friend button
                 $query = "select user1 from friendship where (user1=? and user2=?) or (user1=? and user2=?)";
                 $stmt = mysqli_prepare($con, $query);

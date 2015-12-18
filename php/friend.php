@@ -34,6 +34,16 @@ if ($res->num_rows == 0) {
     echo "<h3>Sorry, you currently don't have any friends.</h3>";
 } else {
     echo "<h3>Hey, here are your friends.</h3>";
+    echo "<div class='container'>";
+    echo "<form class='form-horizontal' action='send_message.php' method='post'>";
+    echo "<input type='hidden' value='ALL_FRIEND' name='receiver'>";
+    echo "<input type='hidden' value='' name='receiver_id'>";
+    echo "<div class='col-sm-9'></div>";
+    echo "<div class='col-sm-1'>";
+    echo "<input class='btn btn-success' type='submit' value='send to all friends'>";
+    echo "</div>";
+    echo "</form>";
+    echo "</div>";
     echo "<table class='table'>";
     echo "<thead><tr><th>name</th><th>email</th><th>send message</th></tr></thead>";
     echo "<tbody>";

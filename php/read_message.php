@@ -28,12 +28,13 @@ echo "<div class='jumbotron'>";
 echo "<div class='container'>";
 #insert a new message
 if (isset($_POST["receiver_id"])) {
+    #a new message
     $receiver = $_POST["receiver"];
     $receiver_id = [];
     if ($receiver == "FRIEND" || $receiver == "NEIGHBOR") {
         array_push($receiver_id, $_POST["receiver_id"]);
         array_push($receiver_id, $id);
-    } else if ($receiver == "ALL_FRIENDS") {
+    } else if ($receiver == "ALL_FRIEND") {
         $query = "select user1 as uid from `friendship` where user2=? union select user2 as uid from `friendship` where user1=?";
         $stmt = mysqli_prepare($con, $query);
         $stmt->bind_param("ii", $id, $id);
