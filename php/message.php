@@ -92,15 +92,34 @@ else if (isset($_POST["email"])) {
 } else {
     $id = $_SESSION["id"];
 }
-$query1 = "select mid, max(send_time) as t from feed natural join message where userid=? group by mid order by t DESC";
+
+$pattern = "%";
+if (isset($_POST["keyword"])) {
+    $pattern = "%".$_POST["keyword"]."%";
+}
+
+$query1 = "select mid, max(send_time) as t from feed natural join ".
+    "(select distinct mid, send_time from message where content like ?) as z where userid=? group by mid order by t DESC";
 $stmt1 = mysqli_prepare($con, $query1);
-$stmt1->bind_param("i", $id);
+$stmt1->bind_param("si", $pattern, $id);
 $stmt1->execute();
 $res1 = $stmt1->get_result();
 if ($res1->num_rows == 0) {
     echo "<h3>Sorry, there are no messages for you.</h3>";
 } else {
-    echo "<h3>Hey, here are messages for you.</h3>";
+    echo "<h3>Hey, here are messages for you.</h3><br>";
+    echo "<form class='form-horizontal' action='message.php' method='post'>";
+    echo "<label class='col-sm-2 control-label'>You can search:</label>";
+    echo "<div class='col-sm-8'>";
+    echo "<input type='text' class='form-control' name='keyword' placeholder='key word'>";
+    echo "</div>";
+    echo "<div class='col-sm-2'>";
+    echo "<input type='submit' class='btn btn-primary' value='search'>";
+    echo "</div>";
+    echo "</form>";
+    echo "</div></div>";
+
+    echo "<div class='container'>";
     echo "<table class='table'>";
     echo "<thead><tr><th>title</th><th>author</th><th>publish time</th><th>recent reply time</th><th>type</th>".
         "<th>read status</th><th>read</th></tr></thead>";
@@ -128,7 +147,7 @@ if ($res1->num_rows == 0) {
     }
     echo "</tbody></table>";
 }
-
+echo "</div>";
 ?>
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
