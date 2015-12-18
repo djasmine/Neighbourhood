@@ -43,7 +43,7 @@
     } else {
         $query = "select username, latitude, longitude
                     from user, friendship
-                    where (friendship.user1 = ? and user.userid = friendship.user2) or (friendship.user2 = ? and user.userid = friendship.user1)  ";
+                    where (friendship.user1 = ? and user.userid = friendship.user2) or (friendship.user2 = ? and user.userid = friendship.user1)";
         $stmt = mysqli_prepare($con, $query);
         $stmt->bind_param("ii", $id, $id);
         $stmt->execute();

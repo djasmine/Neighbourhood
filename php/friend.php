@@ -60,15 +60,8 @@ if ($res->num_rows == 0) {
 }
 echo "</div></div>";
 ?>
-<<<<<<< Updated upstream
-<script>
-    console.log(document.getElementsByName("receiver_id").value);
-</script>
-=======
-
 <div class="container"><div id="googleMap" style="width:75%;height:500px;margin-bottom: 80px"></div></div>
 <script src="http://maps.googleapis.com/maps/api/js"></script>
->>>>>>> Stashed changes
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 <script>
 
@@ -107,7 +100,6 @@ echo "</div></div>";
     });
 
 </script>
-
 <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>
