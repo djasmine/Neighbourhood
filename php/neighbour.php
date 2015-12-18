@@ -25,7 +25,7 @@ $con = mysqli_connect("127.0.0.1:3306", "root", "", "Neighbourhood");
 if (!$con) {
     die("connection failed");
 }
-$query = "select userid, username, email from `user`, neighbor where userid = neighbor_id and host_id = ?";
+$query = "select userid, address, username, email from `user`, neighbor where userid = neighbor_id and host_id = ?";
 $stmt = mysqli_prepare($con, $query);
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -35,10 +35,10 @@ if ($res->num_rows == 0) {
 } else {
     echo "<h3>Hey, here are your neighbors.</h3>";
     echo "<table class='table'>";
-    echo "<thead><tr><th>name</th><th>email</th><th>send message</th></tr></thead>";
+    echo "<thead><tr><th>name</th><th>email</th><th>address</th><th>send message</th></tr></thead>";
     echo "<tbody>";
     while ($row = $res->fetch_assoc()) {
-        echo "<tr><th>".$row["username"]."</th><th>".$row["email"]."</th>";
+        echo "<tr><th>".$row["username"]."</th><th>".$row["email"]."</th><th>".$row["address"]."</th>";
         echo "<form action='send_message.php' method='post'>";
         echo "<input type='hidden' name='receiver' value='NEIGHBOR'>";
         echo "<input type='hidden' name='receiver_id' value=".$row["userid"].">";

@@ -54,7 +54,7 @@ session_start();
     }
     else {
         $hoodid = $row["hoodid"];
-        $query1 = "select userid, username, email from `user` where hoodid=?";
+        $query1 = "select userid, address, username, email from `user` where hoodid=?";
         $stmt1 = mysqli_prepare($con, $query1);
         $stmt1->bind_param("i", $hoodid);
         $stmt1->execute();
@@ -72,11 +72,11 @@ session_start();
             echo "</form>";
             echo "</div>";
             echo "<table class='table'>";
-            echo "<thead><tr><th>name</th><th>email</th><th>add friend</th><th>add neighbor</th></tr></thead>";
+            echo "<thead><tr><th>name</th><th>email</th><th>address</th><th>add friend</th><th>add neighbor</th></tr></thead>";
             echo "<tbody>";
             while ($row = $res1->fetch_assoc()) {
                 if ($row["userid"] != $id) {
-                    echo "<tr><th>" . $row["username"] . "</th><th>" . $row["email"] . "</th>";
+                    echo "<tr><th>" . $row["username"] . "</th><th>" . $row["email"] . "</th><th>".$row["address"]."</th>";
                     # add friend button
                     $query = "select user1 from friendship where (user1=? and user2=?) or (user1=? and user2=?)";
                     $stmt = mysqli_prepare($con, $query);
