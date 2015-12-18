@@ -50,7 +50,46 @@ if ($res->num_rows == 0) {
 }
 echo "</div></div>";
 ?>
+<div class="container"><div id="googleMap" style="width:75%;height:500px;margin-bottom: 80px"></div></div>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script>
+
+    var locations = [];
+
+    $.getJSON('getLocations.php?type=neighbor', function(data) {
+        $.each(data, function(idx, tuple) {
+            var loc = new google.maps.LatLng(tuple.latitude, tuple.longitude);
+            var temp = {name: tuple.username, loc: loc};
+            locations.push(temp);
+        });
+
+        var mapProp = {
+            center:locations[0].loc,
+            zoom:12,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+        };
+
+        var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+        locations.forEach(function(location) {
+
+            var marker = new google.maps.Marker({
+                position:location.loc,
+            });
+
+            marker.setMap(map);
+
+            var infowindow = new google.maps.InfoWindow({
+                content:location.name
+            });
+
+            infowindow.open(map,marker);
+        });
+        console.log(locations);
+    });
+
+</script>
 <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>
