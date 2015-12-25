@@ -1,6 +1,8 @@
 <?php
     session_start();
-    $type = $_GET["type"];
+    if (isset($_GET["type"])) {
+        $type = $_GET["type"];
+    }
 
     if (isset($_SESSION["id"])) {
         $id = $_SESSION["id"];

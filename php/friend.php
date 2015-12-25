@@ -67,7 +67,7 @@ echo "</div></div>";
 
     var locations = [];
 
-    $.getJSON('getLocations.php', function(data) {
+    $.getJSON('getLocations.php?type=friend', function(data) {
         $.each(data, function(idx, tuple) {
             var loc = new google.maps.LatLng(tuple.latitude, tuple.longitude);
             var temp = {name: tuple.username, loc: loc};

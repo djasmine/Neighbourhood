@@ -28,7 +28,7 @@ else if (isset($_POST["description"])) {
     $lng = $_POST["lng"];
     $lat = $_POST["lat"];
     #check block right
-    $query0 = "select blockname from blocks where long_st<? and ?<=long_ed and lati_st<? and ?<=lati_ed";
+    $query0 = "select blockid, blockname from blocks where long_st<? and ?<=long_ed and lati_st<? and ?<=lati_ed";
     $stmt0 = mysqli_prepare($con, $query0);
     $stmt0->bind_param("dddd", $lng, $lng, $lat, $lat);
     $stmt0->execute();
@@ -37,6 +37,9 @@ else if (isset($_POST["description"])) {
         $_SESSION["msg"] = "Address out of our range";
         header("Location: ../php/error.php");
         exit;
+    } else {
+        $row = $res0->fetch_assoc();
+        $blockid = $row["blockid"];
     }
     # check email
     $query = "select userid from `user` where email=?";
